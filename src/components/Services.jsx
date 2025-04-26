@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
-import brakeImage from '../assets/brake.png'; // Import the brake.png image
+import { useInView } from 'react-intersection-observer';
+import { PopupModal } from 'react-calendly';
+import { useState } from 'react';
+import brakeImage from '../assets/brake.png';
 
 const services = [
   {
     name: 'Brake Service',
     description: 'Ensure your safety with our expert brake system inspections, repairs, and replacements.',
     hoverDescription: 'Stay safe on the road with our brake repair services.',
-    image: brakeImage, // Use the imported brake.png for Brake Service
+    image: brakeImage,
     link: '/services/auto-repair',
   },
   {
@@ -75,11 +78,41 @@ const services = [
 ];
 
 export default function Services() {
+  // Hooks for scroll reveal animation
+  const { ref: headingRef, inView: headingInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
+  const { ref: cardsRef, inView: cardsInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.2,
+  });
+
+  // State to manage Calendly popup visibility
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState('');
+  const [calendlyError, setCalendlyError] = useState(false);
+
+  // Function to open Calendly popup
+  const openCalendly = (serviceName) => {
+    setSelectedService(serviceName);
+    setIsCalendlyOpen(true);
+  };
+
+  // Handle Calendly load errors
+  const handleCalendlyError = () => {
+    setCalendlyError(true);
+    setIsCalendlyOpen(false);
+  };
+
   return (
-    <section className="bg-gradient-to-b from-ultra-black to-gray-900 text-white py-20 px-4 sm:px-6 md:px-8">
+    <section className="bg-ultra-black text-white py-20 px-4 sm:px-6 md:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+        <div
+          ref={headingRef}
+          className={`text-center mb-12 reveal ${headingInView ? 'visible' : ''}`}
+        >
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight neon-text">
             SERVICES WE <span className="text-ultra-yellow">OFFER</span>
           </h2>
           <div
@@ -90,17 +123,23 @@ export default function Services() {
             }}
           ></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div
+          ref={cardsRef}
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 reveal ${cardsInView ? 'visible' : ''}`}
+        >
           {services.map((service) => (
             <div
               key={service.name}
-              className="service-card relative h-80 transition-all duration-500 hover:scale-105 hover:-translate-y-2"
+              className="service-card relative h-80 transition-transform duration-300 hover:scale-105"
             >
               {/* Front Side */}
-              <div className="service-card-front rounded-xl shadow-lg border border-transparent bg-gradient-to-r from-ultra-yellow/20 to-ultra-blue/20 p-1">
-                <div className="h-full w-full bg-cover bg-center rounded-lg" style={{ backgroundImage: `url(${service.image})` }}></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-ultra-black bg-opacity-50 backdrop-blur-sm p-4 rounded-lg">
-                  <h3 className="text-2xl font-extrabold text-white text-center mb-2 drop-shadow-md">
+              <div className="service-card-front rounded-lg neon-container">
+                <div
+                  className="h-full w-full bg-cover bg-center"
+                  style={{ backgroundImage: `url(${service.image})` }}
+                ></div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-ultra-black bg-opacity-60 p-4">
+                  <h3 className="text-2xl font-bold text-white text-center mb-2 neon-text">
                     {service.name.toUpperCase()}
                   </h3>
                   <p className="text-white text-center text-sm drop-shadow-sm">
@@ -109,24 +148,74 @@ export default function Services() {
                 </div>
               </div>
               {/* Back Side */}
-              <div className="service-card-back rounded-xl shadow-lg bg-gradient-to-br from-ultra-yellow to-orange-400 flex flex-col items-center justify-center p-6">
-                <h3 className="text-xl font-extrabold text-white mb-4 text-center drop-shadow-md">
+              <div className="service-card-back rounded-lg neon-container flex flex-col items-center justify-center p-6">
+                <h3 className="text-xl font-bold text-white mb-4 text-center neon-text">
                   {service.name.toUpperCase()}
                 </h3>
                 <p className="text-white text-center mb-6 text-sm drop-shadow-sm">
                   {service.hoverDescription}
                 </p>
-                <Link
-                  to={service.link}
-                  className="bg-gradient-to-r from-ultra-yellow to-orange-400 text-ultra-black font-bold py-2 px-4 rounded-md hover:bg-ultra-blue hover:text-white hover:scale-110 transition-all duration-300 border-2 border-ultra-black"
-                >
-                  {service.name === 'Oil Change' ? 'View More' : 'Book Now'}
-                </Link>
+                {service.name === 'Oil Change' ? (
+                  <Link
+                    to={service.link}
+                    className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+                  >
+                    View More
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => openCalendly(service.name)}
+                    className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+                  >
+                    Book Now
+                  </button>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Calendly Popup Modal */}
+      {isCalendlyOpen && (
+        <PopupModal
+          url="https://calendly.com/hello-ultraautofix/30min" // Updated with the new Calendly URL
+          onModalClose={() => setIsCalendlyOpen(false)}
+          open={isCalendlyOpen}
+          rootElement={document.getElementById('root')}
+          prefill={{
+            name: 'Ultra Service Center Customer',
+            customAnswers: {
+              a1: selectedService, // Pass the selected service name to Calendly
+            },
+          }}
+          utm={{
+            utmCampaign: 'UltraServiceCenter',
+            utmSource: 'Website',
+          }}
+          onError={handleCalendlyError}
+        />
+      )}
+
+      {/* Fallback Error Message */}
+      {calendlyError && (
+        <div className="fixed inset-0 flex items-center justify-center bg-ultra-black bg-opacity-80 z-50">
+          <div className="neon-container p-6 rounded-lg max-w-md text-center">
+            <h3 className="text-2xl font-bold text-ultra-yellow mb-4 neon-text">
+              Booking Unavailable
+            </h3>
+            <p className="text-white mb-6">
+              Sorry, we couldn’t load the booking system. Please try again later or contact us directly.
+            </p>
+            <button
+              onClick={() => setCalendlyError(false)}
+              className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

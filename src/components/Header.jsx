@@ -96,7 +96,7 @@ const Header = () => {
         <Link to="/">
           <img src={logoMobile} alt="Ultra Service Center Logo" className="h-10 w-[150px]" width="150" height="40" />
         </Link>
-        <a href="tel:+1234567890" className="text-ultra-yellow hover:text-ultra-blue hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ultra-yellow" aria-label="Call Us">
+        <a href="tel:3012496111" className="text-ultra-yellow hover:text-ultra-blue hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ultra-yellow" aria-label="Call Us">
           <FaPhone size={24} />
         </a>
         <button onClick={toggleNav} className="text-ultra-yellow hover:text-ultra-blue hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-ultra-yellow" aria-label={isNavOpen ? "Close Navigation Menu" : "Open Navigation Menu"}>

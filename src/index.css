@@ -34,6 +34,73 @@ body {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px); /* For Safari support */
   }
+  /* Neon glow effect for containers */
+  .neon-container {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid transparent;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.5), /* ultra-yellow glow */
+                0 0 15px rgba(2, 132, 199, 0.3); /* ultra-blue glow */
+    background-clip: padding-box;
+    position: relative;
+  }
+  .neon-container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FFC107, #0284C7);
+    z-index: -1;
+    border-radius: 1rem;
+  }
+  /* Neon glow effect for text */
+  .neon-text {
+    text-shadow: 0 0 5px rgba(255, 193, 7, 0.8),
+                 0 0 10px rgba(2, 132, 199, 0.5);
+  }
+  /* Scroll reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* Custom Calendly popup styles */
+  .calendly-popup-content {
+    background: #000000 !important; /* ultra-black background */
+    color: #ffffff !important; /* white text */
+  }
+  .calendly-popup-content .calendly-event-details {
+    display: none; /* Hide default event details */
+  }
+  .calendly-popup-content::before {
+    content: 'Ultra Service Center\nDiagnostics Appointment\n🕒 1 hr\n📍 South Bowie Sunoco, 1400 Crain Hwy, Bowie, MD 20716';
+    white-space: pre-line;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #FFC107; /* ultra-yellow */
+    text-shadow: 0 0 5px rgba(255, 193, 7, 0.8);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+  .calendly-popup-content button {
+    background: transparent !important;
+    border: 2px solid #FFC107 !important;
+    color: #FFC107 !important;
+    transition: all 0.3s ease !important;
+  }
+  .calendly-popup-content button:hover {
+    background: #FFC107 !important;
+    color: #000000 !important;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.8) !important;
+  }
 }
 
 /* Explicit CSS for the flip effect */
