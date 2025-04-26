@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { lazy, Suspense } from 'react'; // Import Suspense from react
+import { lazy, Suspense } from 'react';
 import Header from './components/Header';
 
 // Lazy load route components
