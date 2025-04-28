@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import { PopupModal } from 'react-calendly';
 import { useState } from 'react';
+import { Helmet } from 'react-helmet';
 import brakeImage from '../assets/brake.png';
 
 const services = [
@@ -78,7 +79,6 @@ const services = [
 ];
 
 export default function Services() {
-  // Hooks for scroll reveal animation
   const { ref: headingRef, inView: headingInView } = useInView({
     triggerOnce: true,
     threshold: 0.3,
@@ -88,105 +88,113 @@ export default function Services() {
     threshold: 0.2,
   });
 
-  // State to manage Calendly popup visibility
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
   const [calendlyError, setCalendlyError] = useState(false);
 
-  // Function to open Calendly popup
   const openCalendly = (serviceName) => {
     setSelectedService(serviceName);
     setIsCalendlyOpen(true);
   };
 
-  // Handle Calendly load errors
   const handleCalendlyError = () => {
     setCalendlyError(true);
     setIsCalendlyOpen(false);
   };
 
+  const structuredData = services.map((service) => ({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "serviceType": service.name,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Ultra Service Center",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Mississauga",
+        "addressRegion": "ON",
+        "addressCountry": "CA"
+      }
+    },
+    "description": service.description,
+    "url": `https://www.ultraservicecenter.com${service.link}`
+  }));
+
   return (
-    <section className="bg-ultra-black text-white py-20 px-4 sm:px-6 md:px-8">
+    <section className="bg-ultra-black text-white py-20 px-4 sm:px-6 md:px-8 particle-bg">
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+      </Helmet>
       <div className="max-w-7xl mx-auto">
         <div
           ref={headingRef}
-          className={`text-center mb-12 reveal ${headingInView ? 'visible' : ''}`}
+          className={`text-center mb-16 reveal ${headingInView ? 'visible' : ''}`}
         >
-          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight neon-text">
-            SERVICES WE <span className="text-ultra-yellow">OFFER</span>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight gradient-text">
+            SERVICES WE <span>OFFER</span>
           </h2>
           <div
             className="h-1 mx-auto mt-4"
             style={{
               width: '128px',
-              background: 'linear-gradient(to right, transparent, #FFC107, transparent)',
+              background: 'linear-gradient(to right, transparent, #FFC107, #00DDEB, transparent)',
+              boxShadow: '0 0 15px rgba(255, 193, 7, 0.5), 0 0 20px rgba(0, 221, 235, 0.3)',
             }}
           ></div>
         </div>
+
         <div
           ref={cardsRef}
           className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 reveal ${cardsInView ? 'visible' : ''}`}
         >
           {services.map((service) => (
-            <div
-              key={service.name}
-              className="service-card relative h-80 transition-transform duration-300 hover:scale-105"
-            >
-              {/* Front Side */}
-              <div className="service-card-front rounded-lg neon-container">
-                <div
-                  className="h-full w-full bg-cover bg-center"
-                  style={{ backgroundImage: `url(${service.image})` }}
-                ></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-ultra-black bg-opacity-60 p-4">
-                  <h3 className="text-2xl font-bold text-white text-center mb-2 neon-text">
-                    {service.name.toUpperCase()}
-                  </h3>
-                  <p className="text-white text-center text-sm drop-shadow-sm">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
-              {/* Back Side */}
-              <div className="service-card-back rounded-lg neon-container flex flex-col items-center justify-center p-6">
-                <h3 className="text-xl font-bold text-white mb-4 text-center neon-text">
+            <article key={service.name} className="glass-container rounded-xl gradient-overlay">
+              <img
+                src={service.image}
+                alt={`${service.name} at Ultra Service Center`}
+                className="h-48 w-full object-cover neon-image-frame rounded-t-xl"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-ultra-yellow mb-3 gradient-text">
                   {service.name.toUpperCase()}
                 </h3>
-                <p className="text-white text-center mb-6 text-sm drop-shadow-sm">
+                <p className="text-white text-sm elegant-text mb-4">
+                  {service.description}
+                </p>
+                <p className="text-white text-sm elegant-text mb-4 italic">
                   {service.hoverDescription}
                 </p>
                 {service.name === 'Oil Change' ? (
                   <Link
                     to={service.link}
-                    className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+                    className="inline-block bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_20px_rgba(255,193,7,0.8)] transition-all duration-300 ripple-button"
                   >
                     View More
                   </Link>
                 ) : (
                   <button
                     onClick={() => openCalendly(service.name)}
-                    className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+                    className="inline-block bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_20px_rgba(255,193,7,0.8)] transition-all duration-300 ripple-button"
                   >
                     Book Now
                   </button>
                 )}
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>
 
-      {/* Calendly Popup Modal */}
       {isCalendlyOpen && (
         <PopupModal
-          url="https://calendly.com/hello-ultraautofix/30min" // Updated with the new Calendly URL
+          url="https://calendly.com/hello-ultraautofix/30min"
           onModalClose={() => setIsCalendlyOpen(false)}
           open={isCalendlyOpen}
           rootElement={document.getElementById('root')}
           prefill={{
             name: 'Ultra Service Center Customer',
             customAnswers: {
-              a1: selectedService, // Pass the selected service name to Calendly
+              a1: selectedService,
             },
           }}
           utm={{
@@ -197,19 +205,18 @@ export default function Services() {
         />
       )}
 
-      {/* Fallback Error Message */}
       {calendlyError && (
         <div className="fixed inset-0 flex items-center justify-center bg-ultra-black bg-opacity-80 z-50">
-          <div className="neon-container p-6 rounded-lg max-w-md text-center">
-            <h3 className="text-2xl font-bold text-ultra-yellow mb-4 neon-text">
+          <div className="glass-container p-6 rounded-xl gradient-overlay max-w-md text-center">
+            <h3 className="text-2xl font-bold text-ultra-yellow mb-4 gradient-text">
               Booking Unavailable
             </h3>
-            <p className="text-white mb-6">
+            <p className="text-white mb-6 elegant-text">
               Sorry, we couldn’t load the booking system. Please try again later or contact us directly.
             </p>
             <button
               onClick={() => setCalendlyError(false)}
-              className="bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_15px_rgba(255,193,7,0.8)] transition-all duration-300"
+              className="inline-block bg-transparent text-ultra-yellow font-bold py-2 px-4 rounded-md border-2 border-ultra-yellow hover:bg-ultra-yellow hover:text-ultra-black hover:shadow-[0_0_20px_rgba(255,193,7,0.8)] transition-all duration-300 ripple-button"
             >
               Close
             </button>

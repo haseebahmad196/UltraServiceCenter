@@ -54,16 +54,20 @@ body {
     z-index: -1;
     border-radius: 1rem;
   }
-  /* Neon glow effect for text */
-  .neon-text {
-    text-shadow: 0 0 5px rgba(255, 193, 7, 0.8),
-                 0 0 10px rgba(2, 132, 199, 0.5);
+  /* Gradient text effect for headings */
+  .gradient-text {
+    background: linear-gradient(90deg, #FFC107, #00DDEB);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 8px rgba(255, 193, 7, 0.5),
+                 0 0 12px rgba(0, 221, 235, 0.3);
   }
   /* Scroll reveal animation */
   .reveal {
     opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s ease-out;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
   }
   .reveal.visible {
     opacity: 1;
@@ -101,9 +105,150 @@ body {
     color: #000000 !important;
     box-shadow: 0 0 15px rgba(255, 193, 7, 0.8) !important;
   }
+  /* Enhanced Glassmorphism Effect for Containers */
+  .glass-container {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(0, 221, 235, 0.05));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid transparent;
+    border-radius: 16px;
+    box-shadow: inset 0 0 10px rgba(255, 193, 7, 0.2), /* Inner glow */
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(255, 193, 7, 0.3),
+                0 0 30px rgba(0, 221, 235, 0.2); /* Layered shadows */
+    background-clip: padding-box;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .glass-container::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    border-radius: 16px;
+    background: linear-gradient(45deg, rgba(255, 193, 7, 0.3), rgba(0, 221, 235, 0.3));
+    z-index: -1;
+  }
+  .glass-container:hover {
+    transform: scale(1.02);
+    box-shadow: inset 0 0 15px rgba(255, 193, 7, 0.3),
+                0 12px 40px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(255, 193, 7, 0.5),
+                0 0 40px rgba(0, 221, 235, 0.3);
+  }
+  /* Enhanced Neon Image Frame */
+  .neon-image-frame {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.3),
+                0 0 25px rgba(0, 221, 235, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .neon-image-frame:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 30px rgba(255, 193, 7, 0.5),
+                0 0 35px rgba(0, 221, 235, 0.3);
+  }
+  .neon-image-frame::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid transparent;
+    border-radius: 16px;
+    background: linear-gradient(45deg, #FFC107, #00DDEB) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box,
+                  linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .neon-image-frame:hover::after {
+    opacity: 1;
+  }
+  /* Refined Typography */
+  .elegant-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.8;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5),
+                 0 0 8px rgba(255, 193, 7, 0.2),
+                 0 0 10px rgba(0, 221, 235, 0.1);
+  }
+  /* Gradient Overlay for Containers */
+  .gradient-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+  .gradient-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 193, 7, 0.1) 0%,
+      rgba(0, 221, 235, 0.05) 50%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .gradient-overlay > * {
+    position: relative;
+    z-index: 1;
+  }
+  /* Ripple Effect for Buttons */
+  .ripple-button {
+    position: relative;
+    overflow: hidden;
+  }
+  .ripple-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 193, 7, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+  }
+  .ripple-button:hover::after {
+    width: 300%;
+    height: 300%;
+  }
+  /* Particle Animation Background */
+  .particle-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  .particle-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxyYWRpYWxHcmFkaWVudCBpZD0iZ3JhZCI+PHN0b3Agb2Zmc2V0PSI5MCUiIHN0b3AtY29sb3I9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4xKSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0icmdiYSgyNTUsIDI1NSwgMjU1LCAwKSIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiLz48L3N2Zz4=');
+    background-size: 100% 100%;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: -1;
+  }
 }
 
-/* Explicit CSS for the flip effect */
+/* Explicit CSS for the flip effect (no longer used, but kept for reference) */
 .service-card {
   position: relative;
   perspective: 1000px;
